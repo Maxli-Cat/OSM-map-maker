@@ -19,7 +19,7 @@ def cartesian(points, bounds=(600,600)):
         try:
             y, x = point
         except ValueError as ex:
-            print(point)
+            #print(point)
             continue
         x = ((x - WORLD_MIN_X) / worldx) * mapx
         y = ((y - WORLD_MIN_Y) / worldy) * mapy
