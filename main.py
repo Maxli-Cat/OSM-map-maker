@@ -13,6 +13,10 @@ if __name__ == '__main__':
     roads += maps.load_roads(area="Rockingham, NH", element='"highway"="tertiary"')
     roads += maps.load_roads(area="Rockingham, NH", element='"highway"="unclassified"')
     roads += maps.load_roads(area="Rockingham, NH", element='"highway"="residential"')
+    roads += maps.load_roads(area="Epping, NH", element='"highway"')
+    roads += maps.load_roads(area="Freemont, NH", element='"highway"')
+    roads += maps.load_roads(area="Lee, NH", element='"highway"')
+    #roads = maps.load_roads(area="New Hampshire", element='"boundary"="administrative"')
     map_roads = [projections.cartesian(i, bounds=SIZE) for i in roads]
     for road in map_roads:
         draw.drawLines(road, drw, width=1)
