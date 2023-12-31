@@ -1,9 +1,11 @@
+import constants
 
 def cartesian(points, bounds=(600,600)):
-    WORLD_MIN_Y = -71.2
-    WORLD_MAX_Y = -71.0
-    WORLD_MIN_X = 43.1
-    WORLD_MAX_X = 43.0
+    WORLD_MIN_X, WORLD_MAX_X, WORLD_MIN_Y, WORLD_MAX_Y = constants.CART_BOUNDS
+    #WORLD_MIN_Y = -71.2
+    #WORLD_MAX_Y = -71.0
+    #WORLD_MIN_X = 43.1
+    #WORLD_MAX_X = 43.0
 
     DRAW_MIN_X = 0
     DRAW_MIN_Y = 0
