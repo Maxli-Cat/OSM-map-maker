@@ -1,18 +1,19 @@
 import draw
+import maps
 import projections
 
-testpoints = ( (43.00864, -71.07462),
-               (43.02628, -71.07298),
-               (43.03702, -71.06808),
-               (43.03812, -71.07300),
-               (43.04101, -71.30804))
-
-testmappoints = projections.cartesian(testpoints)
+SIZE = (2500,1800)
 
 if __name__ == '__main__':
-    img, drw = draw.setup(1200,1200)
-    draw.drawLines(testmappoints, drw, width=3, color=(100,0,0))
-    print(*testmappoints, sep='\n')
-
+    img, drw = draw.setup(*SIZE)
+    roads = maps.load_roads()
+    roads += maps.load_roads(area="Rockingham, NH", element='"highway"="trunk"')
+    roads += maps.load_roads(area="Rockingham, NH", element='"highway"="primary"')
+    roads += maps.load_roads(area="Rockingham, NH", element='"highway"="secondary"')
+    roads += maps.load_roads(area="Rockingham, NH", element='"highway"="tertiary"')
+    roads += maps.load_roads(area="Rockingham, NH", element='"highway"="unclassified"')
+    roads += maps.load_roads(area="Rockingham, NH", element='"highway"="residential"')
+    map_roads = [projections.cartesian(i, bounds=SIZE) for i in roads]
+    for road in map_roads:
+        draw.drawLines(road, drw, width=1)
     img.show()
-
