@@ -26,7 +26,7 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     roads = []
     for element in tqdm.tqdm(result.elements()):
         roads.append(element.geometry()["coordinates"])
-    print(len(roads))
+    #print(len(roads))
     return roads
 
 
