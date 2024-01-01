@@ -15,10 +15,11 @@ road_types = (
     '"highway"="tertiary"',
     '"highway"="unclassified"',
     '"highway"="residential"',
-    #'"highway"="service"',
+    '"highway"="service"',
     '"highway"="path"',
     '"highway"="footway"',
     '"highway"="track"',
+    '"natural"="coastline"',
 )
 
 road_sizes = (
@@ -30,10 +31,11 @@ road_sizes = (
     1, #tertiary
     1, #unclassified
     1, #residential
-    #1, #service
+    1, #service
     1, #path
     1, #footway
     1, #track
+    1, #coastline
 )
 road_colors = (
     (50,0,0),      #motorway
@@ -44,13 +46,11 @@ road_colors = (
     (0,0,0),       #tertiary
     (50,50,50),    #unclassified
     (75,75,75),    #residential
-    #(125,125,125), #service
+    (125,125,125), #service
     (0,175,0),     #path
     (0,175,0),     #footway
     (125,175,0),   #track
-    (0,50,150),    #island
-    (0,50,150),    #islet
-    (0,50,150),    #water
+    (0,50,150),    #coastline
 )
 
 container_types = (
@@ -97,8 +97,11 @@ if __name__ == '__main__':
     img, drw = draw.setup(*SIZE)
 
     #roads = buildlist("Rockingham, NH") + buildlist("Strafford, NH")
-    roads = build_lists(("Rockingham, NH", "Strafford, NH"),
+    roads = build_lists(("Rockingham, NH", "Strafford, NH", "York County, ME"),
                         road_types, widths=road_sizes, colors=road_colors)
-
-    draw.drawCollection(roads, drw, projection=projections.cartesian, projection_args=[SIZE])
+    waters = build_lists(("Rockingham, NH", "Strafford, NH", "York County, ME"),
+                         container_types, widths=container_sizes, colors=container_edge)
+    draw.drawCollection(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollection(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
     img.show()
+    img.save("map.png")
