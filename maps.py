@@ -6,7 +6,7 @@ from joblib import Memory
 import tqdm
 mem = Memory("./cache")
 
-geolocatior = Nominatim(user_agent="Sandras_Maps_ajj31337@gmail.com")
+geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 overpass = Overpass()
 nom = Nomtm(userAgent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 
