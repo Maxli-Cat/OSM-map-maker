@@ -6,7 +6,7 @@ from joblib import Memory
 import tqdm
 mem = Memory("./cache")
 
-geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
+geolocatior = Nominatim(user_agent="Sandras_Maps_ajj31337@gmail.com")
 overpass = Overpass()
 nom = Nomtm(userAgent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 
@@ -25,7 +25,11 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     result = overpass.query(query)
     roads = []
     for element in tqdm.tqdm(result.elements()):
-        roads.append(element.geometry()["coordinates"])
+        geo = element.geometry()["coordinates"]
+        if isinstance(geo[0][0], list):
+            geo = [x for xs in geo for x in xs]
+        #print(type(geo[0][0]))
+        roads.append(geo)
     #print(len(roads))
     return roads
 
