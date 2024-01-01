@@ -4,7 +4,6 @@ import draw
 import maps
 import projections
 
-#SIZE = (2500*2,1800*2)
 from constants import SIZE
 
 road_types = (
@@ -16,27 +15,60 @@ road_types = (
     '"highway"="tertiary"',
     '"highway"="unclassified"',
     '"highway"="residential"',
-    '"highway"="service"',
+    #'"highway"="service"',
     '"highway"="path"',
     '"highway"="footway"',
     '"highway"="track"',
 )
 
-road_sizes = (5,4,4,3,2,1,1,1,1,1,1,1,1,1,1)
+road_sizes = (
+    5, #motorway
+    4, #link
+    4, #trunk
+    3, #primary
+    2, #secondary
+    1, #tertiary
+    1, #unclassified
+    1, #residential
+    #1, #service
+    1, #path
+    1, #footway
+    1, #track
+)
 road_colors = (
-    (0,0,0),
-    (0,0,0),
-    (0,0,0),
-    (0,0,0),
-    (0,0,0),
-    (0,0,0),
-    (50,50,50),
-    (75,75,75),
-    (75,75,75),
-    (0,175,0),
-    (0,175,0),
-    (125,175,0)
+    (50,0,0),      #motorway
+    (50,0,0),      #motorway link
+    (0,0,0),       #trunk
+    (0,0,0),       #primary
+    (0,0,0),       #secondary
+    (0,0,0),       #tertiary
+    (50,50,50),    #unclassified
+    (75,75,75),    #residential
+    #(125,125,125), #service
+    (0,175,0),     #path
+    (0,175,0),     #footway
+    (125,175,0),   #track
+    (0,50,150),    #island
+    (0,50,150),    #islet
+    (0,50,150),    #water
+)
 
+container_types = (
+    '"place"="island"',
+    '"place"="islet"',
+    '"natural"="water"',
+)
+
+container_sizes = (
+    2, #island
+    1, #islet
+    1, #water
+)
+
+container_edge = (
+    (137,101,53), #island
+    (137,101,53), #islet
+    (55,121,229), #water
 )
 def buildlist(location):
     roads = [{"points": maps.load_roads(area=location, element='"highway"="motorway"'),        "width": 5, "color": (10, 0, 0)},
@@ -65,7 +97,7 @@ if __name__ == '__main__':
     img, drw = draw.setup(*SIZE)
 
     #roads = buildlist("Rockingham, NH") + buildlist("Strafford, NH")
-    roads = build_lists(("Epping, NH","Raymond, NH", "Lee, NH", "Newfields, NH", "Exeter, NH", "Nottingham, NH", "Newmarket, NH", "Freemont, NH", "Kingston, NH"),
+    roads = build_lists(("Rockingham, NH", "Strafford, NH"),
                         road_types, widths=road_sizes, colors=road_colors)
 
     draw.drawCollection(roads, drw, projection=projections.cartesian, projection_args=[SIZE])
