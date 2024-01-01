@@ -13,7 +13,7 @@ def drawLines(points, drw : ImageDraw.ImageDraw, color=(0,0,0), width=1, closed=
     #if closed:
     #    drw.line((points[0], points[-1]), width=width, fill=color)
 
-def drawCollection(collection : dict, drw : ImageDraw.ImageDraw, default_color = (0,0,0), default_width = 1, projection = lambda x:x, projection_args = []):
+def drawCollection(collection : list[dict], drw : ImageDraw.ImageDraw, default_color = (0,0,0), default_width = 1, projection = lambda x:x, projection_args = []):
     for element in collection:
         if "color" in element.keys(): color = element["color"]
         else: color = default_color
