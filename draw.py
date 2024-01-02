@@ -13,7 +13,7 @@ def drawLines(points, drw : ImageDraw.ImageDraw, color=(0,0,0), width=1, closed=
     #if closed:
     #    drw.line((points[0], points[-1]), width=width, fill=color)
 
-def drawCollection(collection : list[dict], drw : ImageDraw.ImageDraw, default_color = (0,0,0), default_width = 1, projection = lambda x:x, projection_args = []):
+def drawCollectionLines(collection : list[dict], drw : ImageDraw.ImageDraw, default_color = (0, 0, 0), default_width = 1, projection = lambda x:x, projection_args = []):
     for element in collection:
         if "color" in element.keys(): color = element["color"]
         else: color = default_color
@@ -22,3 +22,18 @@ def drawCollection(collection : list[dict], drw : ImageDraw.ImageDraw, default_c
         for line in element["points"]:
             mapline = projection(line, *projection_args)
             drawLines(mapline, drw, width=width, color=color)
+
+def drawCollectionPoly(collection : list[dict], drw : ImageDraw.ImageDraw, default_color = (0, 0, 0), default_width = 1, projection = lambda x:x, projection_args = []):
+    for element in collection:
+        if "color" in element.keys():
+            color = element["color"]
+        else:
+            color = default_color
+        if "width" in element.keys():
+            width = element["width"]
+        else:
+            width = default_width
+        for line in element["points"]:
+            mapline = projection(line, *projection_args)
+            drw.polygon(mapline, fill=color, outline=color, width=width)
+
