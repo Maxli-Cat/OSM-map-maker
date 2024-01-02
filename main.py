@@ -93,15 +93,25 @@ def build_lists(locations, features, colors=((0,0,0),), widths=(1,)):
             roads.append({"points":maps.load_roads(area=location, element=feature), "width":width, "color":color})
     return roads
 
+def build_listes_relations(locations, features, colors=((0,0,0),), widths=(1,)):
+    lines = []
+    for location in locations:
+        for feature, color, width in zip(features, itertools.cycle(colors), itertools.cycle(widths)):
+            lines.append({"points":maps.load_relations(area=location, element=feature), "width":width, "color":color})
+    return lines
+
 if __name__ == '__main__':
     img, drw = draw.setup(*SIZE)
 
-    #roads = buildlist("Rockingham, NH") + buildlist("Strafford, NH")
+    roads = buildlist("Rockingham, NH") + buildlist("Strafford, NH")
     roads = build_lists(("Rockingham, NH", "Strafford, NH", "York County, ME"),
                         road_types, widths=road_sizes, colors=road_colors)
     waters = build_lists(("Rockingham, NH", "Strafford, NH", "York County, ME"),
                          container_types, widths=container_sizes, colors=container_edge)
-    draw.drawCollection(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
-    draw.drawCollection(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
+
+    waters2 = build_listes_relations(("New Hampshire",), ('"natural"="water"',), colors=((55,121,229),))
+    draw.drawCollectionLines(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionPoly(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionLines(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
     img.show()
     img.save("map.png")

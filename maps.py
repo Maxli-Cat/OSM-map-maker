@@ -27,6 +27,7 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     roads = []
     print(f"{element}, {area}", file=sys.stderr)
     for element in tqdm.tqdm(result.elements()):
+
         geo = element.geometry()["coordinates"]
         if isinstance(geo[0][0], list):
             geo = [x for xs in geo for x in xs]
@@ -35,4 +36,22 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     #print(len(roads))
     return roads
 
+def load_relations(area="New Hampshire", element = '"natural"="water"'):
+    osmid = lookup(area)
+    areaId = osmid + 3600000000
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
+    results = overpass.query(query)
+    lines = []
+
+    for result in tqdm.tqdm(results.elements()):
+        try:
+            geo = result.geometry()['coordinates']
+        except Exception as ex:
+            print(result)
+            continue
+        for line in geo:
+            lines.append(line)
+        #lines.append(geo)
+
+    return lines
 
