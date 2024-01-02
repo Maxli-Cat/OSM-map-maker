@@ -4,6 +4,7 @@ from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
 from geopy.geocoders import Nominatim
 from joblib import Memory
 import tqdm
+import sys
 mem = Memory("./cache")
 
 geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
@@ -24,6 +25,7 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     query = overpassQueryBuilder(area=areaId, elementType='way', selector=[f'{element}'])
     result = overpass.query(query)
     roads = []
+    print(f"{element}, {area}", file=sys.stderr)
     for element in tqdm.tqdm(result.elements()):
         geo = element.geometry()["coordinates"]
         if isinstance(geo[0][0], list):
