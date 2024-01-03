@@ -8,7 +8,7 @@ import sys
 import OSMPythonTools
 mem = Memory("./cache")
 
-geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
+geolocatior = Nominatim(user_agent="Sandras-Maps-sandraip@hotmail.com")
 overpass = Overpass()
 nom = Nomtm(userAgent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 
@@ -26,8 +26,8 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     query = overpassQueryBuilder(area=areaId, elementType='way', selector=[f'{element}'])
     result = overpass.query(query)
     roads = []
-    print(f"{element}, {area}", file=sys.stderr)
-    for element in tqdm.tqdm(result.elements()):
+    #print(f"{element}, {area}", file=sys.stderr)
+    for element in tqdm.tqdm(result.elements(), desc=f"{area}, {element}"):
 
         geo = element.geometry()["coordinates"]
         if isinstance(geo[0][0], list):
@@ -58,7 +58,7 @@ def load_relations(area="New Hampshire", element = '"natural"="water"'):
     query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
     results = overpass.query(query)
     lines = []
-    for result in tqdm.tqdm(results.elements(), position=0, leave=False):
+    for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
         for member in elements_from_relation(result):
             lines.append(member.geometry()['coordinates'])
     return lines
