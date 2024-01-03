@@ -29,7 +29,7 @@ def save_cache(cache : dict, filename='cache.pickle'):
 elem_cache = load_cache()
 
 def public_save_cache(filename='cache.pickle'):
-    print(elem_cache)
+    #print(elem_cache)
     save_cache(elem_cache, filename=filename)
 
 geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
@@ -60,6 +60,15 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
         roads.append(geo)
     #print(len(roads))
     return roads
+
+
+def load_nodes(area="Rockingham, NH", element='"railway"="stop"'):
+    osmid = lookup(area)
+    areaId = osmid + 3600000000
+    query = overpassQueryBuilder(area=areaId, elementType='node', selector=[f'{element}'])
+    result = overpass.query(query)
+    for point in result.elements():
+        yield point.geometry()['coordinates']
 
 def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
     assert relation.type() == 'relation'
