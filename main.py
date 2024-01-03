@@ -20,7 +20,8 @@ road_types = (
     '"highway"="footway"',
     '"highway"="track"',
     '"natural"="coastline"',
-    '"railway"="rail"'
+    '"railway"="rail"',
+    '"route"="ferry"',
 )
 
 road_sizes = (
@@ -38,6 +39,7 @@ road_sizes = (
     1, #track
     1, #coastline
     1, #railway
+    1, #ferry
 )
 road_colors = (
     (50,0,0),      #motorway
@@ -49,11 +51,12 @@ road_colors = (
     (50,50,50),    #unclassified
     (75,75,75),    #residential
     (125,125,125), #service
-    (0,175,0),     #path
-    (0,175,0),     #footway
-    (125,175,0),   #track
-    (0,50,150),    #coastline
+    (0,87,0),     #path
+    (0,87,0),     #footway
+    (63,87,0),   #track
+    (0,0,0),    #coastline
     (50,0,0),     #railway
+    (0, 255, 255),  # ferry
 )
 
 container_types = (
@@ -69,8 +72,8 @@ container_sizes = (
 )
 
 container_edge = (
-    (137,101,53), #island
-    (137,101,53), #islet
+    (0,0,0), #island
+    (0,0,0), #islet
     (0,0,0), #water
 )
 
@@ -82,10 +85,10 @@ route_types = (
 )
 
 route_sizes = (
-    2, #train
-    1, #bus
+    4, #train
+    3, #bus
     2, #ferry
-    1, #bike
+    2, #bike
 )
 
 route_colors = (
@@ -129,16 +132,17 @@ if __name__ == '__main__':
     img, drw = draw.setup(*SIZE)
 
     #roads = buildlist("Rockingham, NH") + buildlist("Strafford, NH")
-    roads = build_lists(("Rockingham, NH", "Strafford, NH", "York County, ME", "Essex, MA"),
+    routes = build_lists_relations(( "Essex County, MA", "Rockingham, NH", "Strafford, NH", "York County, ME",),
+                                   route_types, widths=route_sizes, colors=route_colors)
+    roads = build_lists(("Essex County, MA",  "Rockingham, NH", "Strafford, NH", "York County, ME", "Epson, NH" ),
                         road_types, widths=road_sizes, colors=road_colors)
-    waters = build_lists(("Rockingham, NH", "Strafford, NH", "York County, ME", "Essex, MA"),
+    waters = build_lists(("Essex County, MA",  "Rockingham, NH", "Strafford, NH", "York County, ME",),
                          container_types, widths=container_sizes, colors=container_edge)
-
-    routes = build_lists_relations(("Rockingham, NH", "Strafford, NH", "York County, ME", "Essex County, MA"))
-
     waters2 = build_lists_relations(("New Hampshire",), ('"natural"="water"',), colors=((55, 121, 229),))
+
     draw.drawCollectionLines(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionLines(routes , drw, projection=projections.cartesian, projection_args=[SIZE])
     img.show()
     img.save("map.png")

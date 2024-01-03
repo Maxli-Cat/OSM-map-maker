@@ -8,7 +8,7 @@ import sys
 import OSMPythonTools
 mem = Memory("./cache")
 
-geolocatior = Nominatim(user_agent="Sandras-Maps-sandraip@hotmail.com")
+geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 overpass = Overpass()
 nom = Nomtm(userAgent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 
