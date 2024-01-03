@@ -1,5 +1,5 @@
 import itertools
-
+import time
 import draw
 import maps
 import projections
@@ -125,24 +125,31 @@ def build_lists_relations(locations, features, colors=((0, 0, 0),), widths=(1,))
     lines = []
     for location in locations:
         for feature, color, width in zip(features, itertools.cycle(colors), itertools.cycle(widths)):
-            lines.append({"points":maps.load_relations(area=location, element=feature), "width":width, "color":color})
+            lines.append({"points":maps.cached_load_relations(area=location, element=feature), "width":width, "color":color})
     return lines
 
 if __name__ == '__main__':
     img, drw = draw.setup(*SIZE)
 
     #roads = buildlist("Rockingham, NH") + buildlist("Strafford, NH")
-    routes = build_lists_relations(( "Essex County, MA", "Rockingham, NH", "Strafford, NH", "York County, ME",),
+    start = time.time()
+    routes = build_lists_relations(( "Rockingham, NH", "Strafford, NH", "York County, ME",),
                                    route_types, widths=route_sizes, colors=route_colors)
-    roads = build_lists(("Essex County, MA",  "Rockingham, NH", "Strafford, NH", "York County, ME", "Epson, NH" ),
+    mid = time.time()
+    maps.public_save_cache()
+    #routes = build_lists_relations(( "Rockingham, NH", "Strafford, NH", "York County, ME",),
+    #                               route_types, widths=route_sizes, colors=route_colors)
+    end = time.time()
+    roads = build_lists(( "Rockingham, NH", "Strafford, NH", "York County, ME", "Epsom, NH", "Pittsfield, NH" ),
                         road_types, widths=road_sizes, colors=road_colors)
-    waters = build_lists(("Essex County, MA",  "Rockingham, NH", "Strafford, NH", "York County, ME",),
+    waters = build_lists((  "Rockingham, NH", "Strafford, NH", "York County, ME",),
                          container_types, widths=container_sizes, colors=container_edge)
-    waters2 = build_lists_relations(("New Hampshire",), ('"natural"="water"',), colors=((55, 121, 229),))
-
+    waters2 = build_lists_relations((  "Rockingham, NH", "Strafford, NH", "York County, ME",), ('"natural"="water"',), colors=((0, 0, 0),))
+    maps.public_save_cache()
     draw.drawCollectionLines(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(routes , drw, projection=projections.cartesian, projection_args=[SIZE])
+    print(f"Cold time {mid-start} seconds\nHot time {end-mid} seconds")
     img.show()
     img.save("map.png")

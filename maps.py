@@ -7,6 +7,30 @@ import tqdm
 import sys
 import OSMPythonTools
 mem = Memory("./cache")
+import os
+import pickle
+
+def load_cache(filename='cache.pickle') -> dict:
+    if os.path.isfile(filename):
+        try:
+            cff = pickle.load(open(filename, 'rb'))
+            return cff
+        except EOFError: return {}
+    else:
+        return {}
+def save_cache(cache : dict, filename='cache.pickle'):
+    if os.path.exists(f"{filename}.bak"):
+        os.remove(f"{filename}.bak")
+    if os.path.exists(filename):
+        os.rename(filename, f"{filename}.bak")
+    dmp = pickle.dumps(cache)
+    open(filename, 'wb').write(dmp)
+
+elem_cache = load_cache()
+
+def public_save_cache(filename='cache.pickle'):
+    print(elem_cache)
+    save_cache(elem_cache, filename=filename)
 
 geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 overpass = Overpass()
@@ -52,6 +76,22 @@ def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
                 yield e
 
 
+def cached_elements_from_relation(relation):
+    global elem_cache
+    id = relation.id()
+
+    if id in elem_cache.keys(): #cache hit
+        for i in elem_cache[id]:
+            yield i
+
+    else: #cache miss
+        mbrs = []
+        for i in elements_from_relation(relation):
+            yield i.geometry()['coordinates']
+            mbrs.append(i.geometry()['coordinates'])
+        elem_cache[id] = mbrs
+        #save_cache(elem_cache)
+
 def load_relations(area="New Hampshire", element = '"natural"="water"'):
     osmid = lookup(area)
     areaId = osmid + 3600000000
@@ -59,8 +99,19 @@ def load_relations(area="New Hampshire", element = '"natural"="water"'):
     results = overpass.query(query)
     lines = []
     for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
-        for member in elements_from_relation(result):
+        for member in cached_elements_from_relation(result):
             lines.append(member.geometry()['coordinates'])
+    return lines
+
+def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
+    osmid = lookup(area)
+    areaId = osmid + 3600000000
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
+    results = overpass.query(query)
+    lines = []
+    for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
+        for member in cached_elements_from_relation(result):
+            lines.append(member)
     return lines
 
 if __name__ == "__main__":

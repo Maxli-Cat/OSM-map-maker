@@ -1,3 +1,5 @@
 map.png
 /cache
 /venv
+cache.pickle
+cache.pickle.bak
