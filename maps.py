@@ -5,6 +5,7 @@ from geopy.geocoders import Nominatim
 from joblib import Memory
 import tqdm
 import sys
+import OSMPythonTools
 mem = Memory("./cache")
 
 geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
@@ -36,22 +37,37 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     #print(len(roads))
     return roads
 
+def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
+    assert relation.type() == 'relation'
+    if level == -1: it = tqdm.tqdm(relation.members(), position=level+1, leave=False)
+    else: it = relation.members()
+    for member in it:
+        if member.type() == 'way':
+            yield member
+        elif member.type() == 'node':
+            continue
+        else:
+            print(level, member.type())
+            for e in elements_from_relation(member, level + 1):
+                yield e
+
+
 def load_relations(area="New Hampshire", element = '"natural"="water"'):
     osmid = lookup(area)
     areaId = osmid + 3600000000
     query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
     results = overpass.query(query)
     lines = []
-
-    for result in tqdm.tqdm(results.elements()):
-        try:
-            geo = result.geometry()['coordinates']
-        except Exception as ex:
-            print(result)
-            continue
-        for line in geo:
-            lines.append(line)
-        #lines.append(geo)
-
+    for result in tqdm.tqdm(results.elements(), position=0, leave=False):
+        for member in elements_from_relation(result):
+            lines.append(member.geometry()['coordinates'])
     return lines
+
+if __name__ == "__main__":
+    area = "New Hampshire"
+    element = '"natural"="water"'
+    osmid = lookup(area)
+    areaId = osmid + 3600000000
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
+    results = overpass.query(query)
 
