@@ -37,7 +37,7 @@ road_sizes = (
     1, #path
     1, #footway
     1, #track
-    1, #coastline
+    5, #coastline
     1, #railway
     1, #ferry
 )
@@ -71,7 +71,7 @@ road_colors_b = (
     (0,87,0),     #path
     (0,87,0),     #footway
     (63,87,0),   #track
-    (150,150,150),    #coastline
+    (0,0,0),    #coastline
     (250,200,200),     #railway
     (0, 255, 255),  # ferry
 )
@@ -116,7 +116,7 @@ route_colors = (
 )
 
 stop_types = (
-    '"railway"="stop"',
+    ('"railway"="stop"','"operator"!~"Scenic"'),
     '"highway"="bus_stop"',
     '"amenity"="ferry_terminal"',
 )
@@ -153,7 +153,10 @@ def build_lists(locations, features, colors=((0,0,0),), widths=(1,)):
     roads = []
     for location in locations:
         for feature, color, width in zip(features, itertools.cycle(colors), itertools.cycle(widths)):
-            roads.append({"points":maps.load_roads(area=location, element=feature), "width":width, "color":color})
+            roads.append({"points":maps.cached_load_roads(area=location, element=feature), "width":width, "color":color})
+    time.sleep(.25)
+    maps.public_save_cache()
+    time.sleep(.25)
     return roads
 
 def build_list_nodes(locations, features, colors=((0, 0, 0),), sizes=(10,)):
@@ -170,24 +173,44 @@ def build_lists_relations(locations, features, colors=((0, 0, 0),), widths=(1,))
             lines.append({"points":maps.cached_load_relations(area=location, element=feature), "width":width, "color":color})
     return lines
 
+states  = ("New Hampshire", "Maine", "Massachusetts", "Vermont", "Rhode Island")
+counties = ("Essex County, MA", "Rockingham, NH", "Strafford, NH", "York County, ME", "Cumberland County, ME", "Oxford County, ME", "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH",)# "Maine", "New Hampshire", "Massachusetts")
+nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
+
+
 if __name__ == '__main__':
+    start = time.time()
     img, drw = draw.setup(*SIZE)
 
+    state_lines = build_lists_relations(("New England", ), ('"border_type"="state"',), widths=(5,))
 
-    routes = build_lists_relations(( "Rockingham, NH", "Strafford, NH", "York County, ME",),
+
+    routes = build_lists_relations(("New Hampshire", "Maine"),
                                    route_types, widths=route_sizes, colors=route_colors)
     stations = build_list_nodes(("New Hampshire", "Maine"),
-                                stop_types, colors=route_colors, sizes=stop_sizes)
-    roads = build_lists(( "Rockingham, NH", "Strafford, NH", "York County, ME", "Epsom, NH", "Pittsfield, NH",),
-                        road_types, widths=road_sizes, colors=road_colors)
-    waters = build_lists((  "Rockingham, NH", "Strafford, NH", "York County, ME",),
-                         container_types, widths=container_sizes, colors=container_edge)
-    waters2 = build_lists_relations((  "Rockingham, NH", "Strafford, NH", "York County, ME",), ('"natural"="water"',), colors=((0, 0, 0),))
+                                stop_types, colors=stop_colors, sizes=stop_sizes)
+
+    for i in range(1000):
+        try:
+            roads = build_lists(counties, road_types, widths=road_sizes, colors=road_colors_b)
+            break
+        except:
+            time.sleep(i)
+            print(f"Error, {i} times")
+            continue
+
+    waters = build_lists(counties, container_types, widths=container_sizes, colors=container_edge)
+    waters2 = build_lists_relations(counties, ('"natural"="water"',), colors=((0, 0, 0),))
     maps.public_save_cache()
+
+
     draw.drawCollectionLines(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(routes , drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionLines(state_lines , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionPoints(stations[::-1] , drw, projection=projections.cartesian, projection_args=[SIZE])
     img.show()
     img.save("map.png")
+    stop = time.time()
+    print(f"Took {stop - start} seconds")
