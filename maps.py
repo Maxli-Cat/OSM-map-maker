@@ -10,6 +10,8 @@ mem = Memory("./cache")
 import os
 import pickle
 
+CACHE_ONLY = False
+
 def load_cache(filename='cache.pickle') -> dict:
     if os.path.isfile(filename):
         try:
@@ -61,6 +63,16 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     #print(len(roads))
     return roads
 
+def cached_load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
+    global elem_cache
+    key = f"{area}-{element}"
+    if key in elem_cache.keys(): #cache hit
+        return elem_cache[key]
+    #cache miss
+    if CACHE_ONLY: return []
+    roads = load_roads(area=area, element=element)
+    elem_cache[key] = roads
+    return roads
 
 def load_nodes(area="Rockingham, NH", element='"railway"="stop"'):
     osmid = lookup(area)
@@ -83,7 +95,6 @@ def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
             print(level, member.type())
             for e in elements_from_relation(member, level + 1):
                 yield e
-
 
 def cached_elements_from_relation(relation):
     global elem_cache
