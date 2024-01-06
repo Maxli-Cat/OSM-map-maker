@@ -134,6 +134,17 @@ def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
             lines.append(member)
     return lines
 
+def double_cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
+    global elem_cache
+    key = f"{area}xr{element}"
+    if key in elem_cache.keys(): #cache hit
+        return elem_cache[key]
+    #cache miss
+    if CACHE_ONLY: return []
+    geo = cached_load_relations(area=area, element=element)
+    elem_cache[key] = geo
+    return geo
+
 if __name__ == "__main__":
     area = "New Hampshire"
     element = '"natural"="water"'
