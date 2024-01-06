@@ -9,6 +9,7 @@ import OSMPythonTools
 mem = Memory("./cache")
 import os
 import pickle
+import time
 
 CACHE_ONLY = False
 
@@ -20,6 +21,7 @@ def load_cache(filename='cache.pickle') -> dict:
         except EOFError: return {}
     else:
         return {}
+
 def save_cache(cache : dict, filename='cache.pickle'):
     if os.path.exists(f"{filename}.bak"):
         os.remove(f"{filename}.bak")
@@ -55,11 +57,18 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     #print(f"{element}, {area}", file=sys.stderr)
     for element in tqdm.tqdm(result.elements(), desc=f"{area}, {element}"):
 
-        geo = element.geometry()["coordinates"]
-        if isinstance(geo[0][0], list):
-            geo = [x for xs in geo for x in xs]
-        #print(type(geo[0][0]))
-        roads.append(geo)
+        try:
+            geo = element.geometry()["coordinates"]
+            if isinstance(geo[0][0], list):
+                geo = [x for xs in geo for x in xs]
+            #print(type(geo[0][0]))
+            roads.append(geo)
+        except Exception as ex:
+            print(str(ex))
+            if "HTTP Error 410" in str(ex):
+                continue
+            else:
+                raise ex
     #print(len(roads))
     return roads
 
