@@ -51,8 +51,20 @@ lookup = mem.cache(raw_lookup)
 def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     osmid = lookup(area)
     areaId = osmid + 3600000000
-    query = overpassQueryBuilder(area=areaId, elementType='way', selector=[f'{element}'])
-    result = overpass.query(query)
+
+    if type(element) == str:
+        element = element.replace('[', '').replace(']', '').replace('(', '').replace(')', '')
+        if ',' in element:
+            element = element.split(',')
+        else:
+            element = [element]
+    try:
+        query = overpassQueryBuilder(area=areaId, elementType='way', selector=element)
+        result = overpass.query(query)
+        #print(f"Passed with element {element}, type {type(element)}")
+    except Exception as ex:
+        print(f"Failed with element {element}, type {type(element)}")
+        exit()
     roads = []
     #print(f"{element}, {area}", file=sys.stderr)
     for element in tqdm.tqdm(result.elements(), desc=f"{area}, {element}"):
@@ -83,10 +95,19 @@ def cached_load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     elem_cache[key] = roads
     return roads
 
-def load_nodes(area="Rockingham, NH", element='"railway"="stop"'):
+def load_nodes(element='"railway"="station"', area="Rockingham, NH"):
     osmid = lookup(area)
     areaId = osmid + 3600000000
-    query = overpassQueryBuilder(area=areaId, elementType='node', selector=[f'{element}'])
+
+    if type(element) == str:
+        element = element.replace('[','').replace(']','').replace('(','').replace(')','')
+        if ',' in element:
+            element = element.split(',')
+        else:
+            element = [element]
+
+    query = overpassQueryBuilder(area=areaId, elementType='node', selector=element)
+
     result = overpass.query(query)
     for point in result.elements():
         yield point.geometry()['coordinates']
@@ -124,7 +145,8 @@ def cached_elements_from_relation(relation):
 def load_relations(area="New Hampshire", element = '"natural"="water"'):
     osmid = lookup(area)
     areaId = osmid + 3600000000
-    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
+    if type(element == str): element = [element]
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=element)
     results = overpass.query(query)
     lines = []
     for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
@@ -135,7 +157,8 @@ def load_relations(area="New Hampshire", element = '"natural"="water"'):
 def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
     osmid = lookup(area)
     areaId = osmid + 3600000000
-    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
+    if type(element == str): element = [element]
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=element)
     results = overpass.query(query)
     lines = []
     for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
