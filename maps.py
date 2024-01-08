@@ -1,9 +1,7 @@
 from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
 from geopy.geocoders import Nominatim
-from joblib import Memory
 import tqdm
 import OSMPythonTools
-mem = Memory("./cache")
 import os
 import pickle
 import time
@@ -39,7 +37,14 @@ overpass = Overpass()
 def raw_lookup(location):
     return geolocatior.geocode(location).raw["osm_id"]
 
-lookup = mem.cache(raw_lookup)
+def lookup(location):
+    global elem_cache
+    key = f"Location - {location}"
+    if key in elem_cache.keys():
+        return elem_cache[key]
+    result = raw_lookup(location)
+    elem_cache[key] = result
+    return result
 
 def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     osmid = lookup(area)
