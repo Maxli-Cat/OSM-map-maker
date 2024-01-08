@@ -33,7 +33,7 @@ def save_cache(cache : dict, filename='cache.pickle'):
 elem_cache = load_cache()
 
 def public_save_cache(filename='cache.pickle'):
-    #print(elem_cache)
+    #print(elem_cache.keys()*, sep='\n')
     save_cache(elem_cache, filename=filename)
 
 geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
@@ -126,19 +126,6 @@ def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
             for e in elements_from_relation(member, level + 1):
                 yield e
 
-def outer_elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
-    assert relation.type() == 'relation'
-    if level == -1: it = tqdm.tqdm(relation.members(), position=level+1, leave=False)
-    else: it = relation.members(False, False, True)
-    for member in it:
-        if member.type() == 'way':
-            yield member
-        elif member.type() == 'node':
-            continue
-        else:
-            print(level, member.type())
-            for e in elements_from_relation(member, level + 1):
-                yield e
 
 def cached_elements_from_relation(relation):
     global elem_cache
@@ -155,40 +142,6 @@ def cached_elements_from_relation(relation):
             mbrs.append(i.geometry()['coordinates'])
         elem_cache[id] = mbrs
         #save_cache(elem_cache)
-
-def cached_outer_elements_from_relation(relation):
-    global elem_cache
-    id = "out"+str(relation.id())
-
-    if id in elem_cache.keys(): #cache hit
-        for i in elem_cache[id]:
-            yield i
-
-    else: #cache miss
-        mbrs = []
-        for i in outer_elements_from_relation(relation):
-            yield i.geometry()['coordinates']
-            mbrs.append(i.geometry()['coordinates'])
-        elem_cache[id] = mbrs
-        #save_cache(elem_cache)
-
-def load_water_outer_relations(area='New Hampshire', element = '"natural"="water"'):
-    if type(element) == str:
-        element = element.replace('[','').replace(']','').replace('(','').replace(')','')
-        if ',' in element:
-            element = element.split(',')
-        else:
-            element = [element]
-
-    osmid = lookup(area)
-    areaId = osmid + 3600000000
-    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=element)
-    results = overpass.query(query)
-    lines = []
-    for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
-        for member in outer_elements_from_relation(result):
-            lines.append(member.geometry()['coordinates'])
-    return lines
 
 def point_equality(a, b):
     return (abs(a[0] - b[0]) < 0.000002) and (abs(a[1] - b[1]) < 0.000002)
@@ -234,7 +187,7 @@ def get_water_relations(area='New Hampshire'):
 
 def cached_get_water_relations(area="New Hampshire"):
     global elem_cache
-    key = f"water-{area}"
+    key = f"{area}-x-water-relation"
 
     if key in elem_cache.keys(): #cache hit
         print(f"Water Cache Hit, {key}")
@@ -242,7 +195,7 @@ def cached_get_water_relations(area="New Hampshire"):
     print(f"Water Cache Miss, {key}")
     result = [i for i in tqdm.tqdm(get_water_relations(area))]
     elem_cache[key] = result
-    print(f"{elem_cache[key]=}")
+    #print(f"{key=},")
     return result
 
 
