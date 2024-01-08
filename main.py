@@ -153,22 +153,6 @@ stop_colors = (
     (0, 255, 255),  # ferry
 )
 
-def buildlist(location):
-    roads = [{"points": maps.load_roads(area=location, element='"highway"="motorway"'),        "width": 5, "color": (10, 0, 0)},
-             {"points": maps.load_roads(area=location, element='"highway"="motorway_link"'),   "width": 4, "color": (10, 0, 0)},
-             {"points": maps.load_roads(area=location, element='"highway"="trunk"'),           "width": 4},
-             {"points": maps.load_roads(area=location, element='"highway"="primary"'),         "width": 3},
-             {"points": maps.load_roads(area=location, element='"highway"="secondary"'),       "width": 2},
-             {"points": maps.load_roads(area=location, element='"highway"="tertiary"'),        "width": 1},
-             {"points": maps.load_roads(area=location, element='"highway"="unclassified"'),    "width": 1, "color": (175, 175, 175)},
-             {"points": maps.load_roads(area=location, element='"highway"="residential"'),     "width": 1, "color": (125, 125, 125)},
-             {"points": maps.load_roads(area=location, element='"highway"="path"'),            "width": 1, "color": (0, 175, 0)},
-             {"points": maps.load_roads(area=location, element='"highway"="footway"'),         "width": 1, "color": (0, 175, 0)},
-             {"points": maps.load_roads(area=location, element='"highway"="track"'),           "width": 1, "color": (125, 175, 0)},
-             {"points": maps.load_roads(area="New Hampshire", element='"boundary"="administrative"'), "width": 3, "color":(255,0,0)}
-             ]
-    return roads
-
 def build_lists(locations, features, colors=((0,0,0),), widths=(1,)):
     roads = []
     for location in locations:
@@ -198,8 +182,10 @@ def build_lists_waters(locations):
 
 
 states  = ("New Hampshire", "Maine", "Massachusetts", "Vermont", "Rhode Island")
-counties = ("Rockingham, NH", "Strafford, NH","Hillsborough County, NH", "York County, ME", "Cumberland County, ME", "Oxford County, ME", "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH","Suffolk County, MA",
-             "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Cheshire County, NH", "Grafton County, NH")#, "Maine", "Massachusetts", "Rhode Island")
+counties = ("Sullivan County, NH", "Rockingham, NH", "Strafford, NH","Hillsborough County, NH", "York County, ME", "Cumberland County, ME", "Oxford County, ME", "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH","Suffolk County, MA",
+             "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Cheshire County, NH", "Grafton County, NH",
+            "Bristol County, RI", "Kent County, RI", "Newport County, RI", "Providence County, RI"
+            )#"Maine", "Massachusetts", "Rhode Island")
 nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
 
 

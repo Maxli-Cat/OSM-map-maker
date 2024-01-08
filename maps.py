@@ -1,10 +1,7 @@
-from OSMPythonTools.api import Api
-from OSMPythonTools.nominatim import Nominatim as Nomtm
 from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
 from geopy.geocoders import Nominatim
 from joblib import Memory
 import tqdm
-import sys
 import OSMPythonTools
 mem = Memory("./cache")
 import os
@@ -38,10 +35,6 @@ def public_save_cache(filename='cache.pickle'):
 
 geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 overpass = Overpass()
-nom = Nomtm(userAgent="Sophies_Art_Maps_maxlicatenby@gmail.com")
-
-def old_lookup(location):
-    return nom.query(location)
 
 def raw_lookup(location):
     return geolocatior.geocode(location).raw["osm_id"]
@@ -197,19 +190,6 @@ def cached_get_water_relations(area="New Hampshire"):
     elem_cache[key] = result
     #print(f"{key=},")
     return result
-
-
-def load_relations(area="New Hampshire", element = '"natural"="water"'):
-    osmid = lookup(area)
-    areaId = osmid + 3600000000
-    if type(element == str): element = [element]
-    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=element)
-    results = overpass.query(query)
-    lines = []
-    for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
-        for member in cached_elements_from_relation(result):
-            lines.append(member.geometry()['coordinates'])
-    return lines
 
 def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
     osmid = lookup(area)
