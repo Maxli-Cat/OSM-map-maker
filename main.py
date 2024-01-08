@@ -97,8 +97,8 @@ container_sizes = (
 )
 
 container_edge = (
-    ((255,255,255), (0,0,0)), #island
-    ((255,255,255), (0,0,0)), #islet
+    ((255,255,255), (255,255,255)), #island
+    ((255,255,255), (255,255,255)), #islet
     ((225,240,255), (225,240,255)) #water
 )
 
@@ -174,9 +174,6 @@ def build_lists(locations, features, colors=((0,0,0),), widths=(1,)):
     for location in locations:
         for feature, color, width in zip(features, itertools.cycle(colors), itertools.cycle(widths)):
             roads.append({"points":maps.cached_load_roads(area=location, element=feature), "width":width, "color":color})
-    time.sleep(.25)
-    maps.public_save_cache()
-    time.sleep(.25)
     return roads
 
 def build_list_nodes(locations, features, colors=((0, 0, 0),), sizes=(10,)):
@@ -194,9 +191,15 @@ def build_lists_relations(locations, features, colors=((0, 0, 0),), widths=(1,))
             lines.append({"points":maps.double_cached_load_relations(area=location, element=feature), "width":width, "color":color})
     return lines
 
+def build_lists_waters(locations):
+    for location in locations:
+        for water in maps.cached_get_water_relations(location):
+            yield water
+
+
 states  = ("New Hampshire", "Maine", "Massachusetts", "Vermont", "Rhode Island")
-counties = ("Rockingham, NH", "Strafford, NH","Hillsborough County, NH", "York County, ME", "Cumberland County, ME", "Oxford County, ME", "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH","Suffolk County, MA",
-            "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Cheshire County, NH", "Grafton County, NH")#, "Maine", "Massachusetts")
+counties = ("Rockingham, NH", "Strafford, NH","Hillsborough County, NH", "York County, ME")#, "Cumberland County, ME", "Oxford County, ME", "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH","Suffolk County, MA",
+           # "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Cheshire County, NH", "Grafton County, NH")#, "Maine", "Massachusetts")
 nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
 
 
@@ -221,12 +224,12 @@ if __name__ == '__main__':
                                 stop_types, colors=stop_colors, sizes=stop_sizes)
 
     waters = build_lists(counties, container_types, widths=container_sizes, colors=container_edge)
-    waters2 = build_lists_relations(counties, ('"natural"="water"',), colors=((0, 0, 0),))
+    #waters2 = build_lists_relations(counties, ('"natural"="water"',), colors=(((225,240,255), (225,240,255)),), outer_only=True)
+    waters2 = build_lists_waters(counties)
+    time.sleep(1)
     maps.public_save_cache()
-
-
-    draw.drawCollectionLines(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
-    draw.drawCollectionPoly(waters[::-1], drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionWater(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionPoly(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(routes , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(state_lines , drw, projection=projections.cartesian, projection_args=[SIZE])

@@ -126,6 +126,20 @@ def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
             for e in elements_from_relation(member, level + 1):
                 yield e
 
+def outer_elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
+    assert relation.type() == 'relation'
+    if level == -1: it = tqdm.tqdm(relation.members(), position=level+1, leave=False)
+    else: it = relation.members(False, False, True)
+    for member in it:
+        if member.type() == 'way':
+            yield member
+        elif member.type() == 'node':
+            continue
+        else:
+            print(level, member.type())
+            for e in elements_from_relation(member, level + 1):
+                yield e
+
 def cached_elements_from_relation(relation):
     global elem_cache
     id = relation.id()
@@ -141,6 +155,96 @@ def cached_elements_from_relation(relation):
             mbrs.append(i.geometry()['coordinates'])
         elem_cache[id] = mbrs
         #save_cache(elem_cache)
+
+def cached_outer_elements_from_relation(relation):
+    global elem_cache
+    id = "out"+str(relation.id())
+
+    if id in elem_cache.keys(): #cache hit
+        for i in elem_cache[id]:
+            yield i
+
+    else: #cache miss
+        mbrs = []
+        for i in outer_elements_from_relation(relation):
+            yield i.geometry()['coordinates']
+            mbrs.append(i.geometry()['coordinates'])
+        elem_cache[id] = mbrs
+        #save_cache(elem_cache)
+
+def load_water_outer_relations(area='New Hampshire', element = '"natural"="water"'):
+    if type(element) == str:
+        element = element.replace('[','').replace(']','').replace('(','').replace(')','')
+        if ',' in element:
+            element = element.split(',')
+        else:
+            element = [element]
+
+    osmid = lookup(area)
+    areaId = osmid + 3600000000
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=element)
+    results = overpass.query(query)
+    lines = []
+    for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
+        for member in outer_elements_from_relation(result):
+            lines.append(member.geometry()['coordinates'])
+    return lines
+
+def point_equality(a, b):
+    return (abs(a[0] - b[0]) < 0.000002) and (abs(a[1] - b[1]) < 0.000002)
+
+
+def get_water_relations(area='New Hampshire'):
+    osmid = lookup(area)
+    areaId = osmid + 3600000000
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=['"natural"="water"'])
+    results = overpass.query(query)
+    lines = []
+    print(results.countElements())
+    for element in results.elements():
+        print('---')
+        ways = element.members(True, False, True)
+        if len(ways) == 0: continue
+        elif len(ways) == 1: yield ways[0].geometry()['coordinates']
+
+        else:
+            line = ways[0].geometry()['coordinates']
+            for way in ways[1:]:
+                #print(f"{way.id()=}")
+                #print(f'{len(line)=}')
+                if way.type() != 'way':
+                    continue
+
+                next_segment = way.geometry()['coordinates']
+                try:
+                    if point_equality(next_segment[0], line[0]):
+                        line = next_segment[::-1] + line
+                    elif point_equality(next_segment[0], line[-1]):
+                        line = line + next_segment
+                    elif point_equality(next_segment[-1], line[0]):
+                        line = next_segment + line
+                    elif point_equality(next_segment[-1], line[-1]):
+                        line = next_segment + line[::-1]
+                    else:
+                        print(f"{line[0]=},{line[-1]=}, {next_segment[0]=},{next_segment[-1]=}, {element.id()=}, {way.id()=}, {line=}")
+                        continue
+                except TypeError as ex:
+                    print(f"{ex=}, https://openstreetmap.org/relation/{element.id()}")
+            yield line
+
+def cached_get_water_relations(area="New Hampshire"):
+    global elem_cache
+    key = f"water-{area}"
+
+    if key in elem_cache.keys(): #cache hit
+        print(f"Water Cache Hit, {key}")
+        return elem_cache[key]
+    print(f"Water Cache Miss, {key}")
+    result = [i for i in tqdm.tqdm(get_water_relations(area))]
+    elem_cache[key] = result
+    print(f"{elem_cache[key]=}")
+    return result
+
 
 def load_relations(area="New Hampshire", element = '"natural"="water"'):
     osmid = lookup(area)
@@ -178,10 +282,6 @@ def double_cached_load_relations(area="New Hampshire", element = '"natural"="wat
     return geo
 
 if __name__ == "__main__":
-    area = "New Hampshire"
-    element = '"natural"="water"'
-    osmid = lookup(area)
-    areaId = osmid + 3600000000
-    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=[f'{element}'])
-    results = overpass.query(query)
+    pass
+
 

@@ -51,5 +51,20 @@ def drawCollectionPoly(collection : list[dict], drw : ImageDraw.ImageDraw, defau
             width = default_width
         for line in element["points"]:
             mapline = projection(line, *projection_args)
-            drw.polygon(mapline, fill=color[0], outline=color[1], width=width)
+            try:
+                drw.polygon(mapline, fill=color[0], outline=color[1], width=width)
+            except TypeError as ex:
+                print(str(ex))
+                print(mapline)
 
+def drawCollectionWater(collection : list[list], drw : ImageDraw.ImageDraw, default_color = ((225,240,255), (225,240,255)), default_width = 1, projection = lambda x:x, projection_args = []):
+    for element in collection:
+        color = default_color
+        width = default_width
+        mapline = projection(element, *projection_args)
+        try:
+            drw.polygon(mapline, fill=color[0], outline=color[1], width=width)
+        except TypeError as ex:
+            pass
+            #print(str(ex))
+            #print(mapline)
