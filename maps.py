@@ -1,4 +1,5 @@
 from OSMPythonTools.overpass import overpassQueryBuilder, Overpass
+import OSMPythonTools.api
 from geopy.geocoders import Nominatim
 import tqdm
 import OSMPythonTools
