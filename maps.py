@@ -36,7 +36,12 @@ geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
 overpass = Overpass()
 
 def raw_lookup(location):
-    return geolocatior.geocode(location).raw["osm_id"]
+    try:
+        loc = geolocatior.geocode(location).raw["osm_id"]
+    except AttributeError as ex:
+        print(location)
+        raise ex
+    return loc
 
 def lookup(location):
     global elem_cache

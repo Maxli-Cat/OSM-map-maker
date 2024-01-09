@@ -57,7 +57,7 @@ def drawCollectionPoly(collection : list[dict], drw : ImageDraw.ImageDraw, defau
                 print(str(ex))
                 print(mapline)
 
-def drawCollectionWater(collection : list[list], drw : ImageDraw.ImageDraw, default_color = ((225,240,255), (225,240,255)), default_width = 1, projection = lambda x:x, projection_args = []):
+def drawCollectionWater(collection, drw : ImageDraw.ImageDraw, default_color = ((225,240,255), (225,240,255)), default_width = 1, projection = lambda x:x, projection_args = []):
     for element in collection:
         color = default_color
         width = default_width
