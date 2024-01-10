@@ -6,6 +6,7 @@ import OSMPythonTools
 import os
 import pickle
 import time
+import random
 
 CACHE_ONLY = False
 
@@ -46,7 +47,7 @@ def raw_lookup(location):
 def lookup(location):
     global elem_cache
     key = f"Location - {location}"
-    if key in elem_cache.keys():
+    if key in elem_cache.keys() and random.random() < 0.99:
         return elem_cache[key]
     result = raw_lookup(location)
     elem_cache[key] = result
@@ -91,7 +92,7 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
 def cached_load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     global elem_cache
     key = f"{area}-{element}"
-    if key in elem_cache.keys(): #cache hit
+    if key in elem_cache.keys() and random.random() < 0.99: #cache hit, random invalidation
         return elem_cache[key]
     #cache miss
     if CACHE_ONLY: return []
@@ -193,8 +194,8 @@ def cached_get_water_relations(area="New Hampshire"):
     global elem_cache
     key = f"{area}-x-water-relation"
 
-    if key in elem_cache.keys(): #cache hit
-        print(f"Water Cache Hit, {key}")
+    if key in elem_cache.keys() and random.random() < 0.99: #cache hit
+        #print(f"Water Cache Hit, {key}")
         return elem_cache[key]
     print(f"Water Cache Miss, {key}")
     result = [i for i in tqdm.tqdm(get_water_relations(area))]
@@ -217,7 +218,7 @@ def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
 def double_cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
     global elem_cache
     key = f"{area}xr{element}"
-    if key in elem_cache.keys(): #cache hit
+    if key in elem_cache.keys() and random.random() < 0.99: #cache hit
         return elem_cache[key]
     #cache miss
     if CACHE_ONLY: return []

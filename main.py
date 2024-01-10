@@ -77,7 +77,7 @@ road_colors_b = (
     (225,225,225), #service
     (0,87,0),     #path
     (0,87,0),     #footway
-    (63,87,0),   #track
+    (159,171,127),   #track
     (0,0,0),    #coastline
     (250,200,200),     #railway
     (0, 255, 255),  # ferry
@@ -182,10 +182,13 @@ def build_lists_waters(locations):
 
 
 states  = ("New Hampshire", "Maine", "Massachusetts", "Vermont", "Rhode Island")
-counties = ("Sullivan County, NH", "Rockingham, NH", "Strafford, NH","Hillsborough County, NH", "York County, ME", "Cumberland County, ME", "Oxford County, ME", "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH","Suffolk County, MA",
-             "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Cheshire County, NH", "Grafton County, NH",
-            "Bristol County, RI", "Kent County, RI", "Newport County, RI", "Providence County, RI"
-            )#"Maine", "Massachusetts", "Rhode Island")
+counties = ("Sullivan County, NH", "Rockingham, NH", "Strafford, NH","Hillsborough County, NH",  "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH", "Grafton County, NH", "Coos County, NH", "Cheshire County, NH",
+            "Maine", "Rhode Island",
+            "Essex County, VT", "Caledonia County, VT", "Orange County, VT", "Windsor County, VT", "Windham County, VT", "Bennington County, VT", "Rutland County, VT", "Addison County, VT", "Washington County, VT", "Chittenden County, VT", "Lamoille County, VT", "Orleans County, VT", "Franklin County, VT",
+            "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Barnstable County, MA", "Nantucket County, MA", "Suffolk County, MA", "Bristol County, MA", "Hampden County,MA", "Hampshire County, MA", "Franklin County, MA", "Berkshire County, MA",
+            "Windham County, CT", "New London County, CT", "Middlesex County, CT", "Tolland County, CT", #"Hartford County, CT", "New Haven County, CT", "Litchfield County, CT"
+            #"Suffolk County, NY",
+            )# "Massachusetts", "Connecticut")
 nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
 
 
@@ -218,7 +221,7 @@ if __name__ == '__main__':
     draw.drawCollectionPoly(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(routes , drw, projection=projections.cartesian, projection_args=[SIZE])
-    draw.drawCollectionLines(state_lines , drw, projection=projections.cartesian, projection_args=[SIZE])
+    #draw.drawCollectionLines(state_lines , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionPoints(stations[::-1], drw, projection=projections.cartesian, projection_args=[SIZE])
     img.show()
     img.save("map.png")

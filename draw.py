@@ -61,8 +61,8 @@ def drawCollectionWater(collection, drw : ImageDraw.ImageDraw, default_color = (
     for element in collection:
         color = default_color
         width = default_width
-        mapline = projection(element, *projection_args)
         try:
+            mapline = projection(element, *projection_args)
             drw.polygon(mapline, fill=color[0], outline=color[1], width=width)
         except TypeError as ex:
             pass

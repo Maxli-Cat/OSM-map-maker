@@ -1,7 +1,7 @@
 import math
 
 SIZE = (2500*5, 1800*2)
-CART_BOUNDS = (43.7, 41.4, -72.25, -69.8)
+CART_BOUNDS = (45.0, 41.0, -73.75, -68.63)
 #CART_BOUNDS = (43.1, 42.9, -71, -70.6)
 
 run = abs(CART_BOUNDS[0] - CART_BOUNDS[1]) * 111.32
