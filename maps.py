@@ -47,7 +47,7 @@ def raw_lookup(location):
 def lookup(location):
     global elem_cache
     key = f"Location - {location}"
-    if key in elem_cache.keys() and random.random() < 0.99:
+    if key in elem_cache.keys() and random.random() < 0.9999:
         return elem_cache[key]
     result = raw_lookup(location)
     elem_cache[key] = result
@@ -84,6 +84,9 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
             print(str(ex))
             if "HTTP Error 410" in str(ex):
                 continue
+            elif "Expected object or value" in str(ex):
+                print(f"Weirdness, {ex}")
+                continue
             else:
                 raise ex
     #print(len(roads))
@@ -92,7 +95,7 @@ def load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
 def cached_load_roads(area="Rockingham, NH", element='"highway"="motorway"'):
     global elem_cache
     key = f"{area}-{element}"
-    if key in elem_cache.keys() and random.random() < 0.99: #cache hit, random invalidation
+    if key in elem_cache.keys() and random.random() < 0.9999: #cache hit, random invalidation
         return elem_cache[key]
     #cache miss
     if CACHE_ONLY: return []
@@ -194,7 +197,7 @@ def cached_get_water_relations(area="New Hampshire"):
     global elem_cache
     key = f"{area}-x-water-relation"
 
-    if key in elem_cache.keys() and random.random() < 0.99: #cache hit
+    if key in elem_cache.keys() and random.random() < 0.9999: #cache hit
         #print(f"Water Cache Hit, {key}")
         return elem_cache[key]
     print(f"Water Cache Miss, {key}")
@@ -218,7 +221,7 @@ def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
 def double_cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
     global elem_cache
     key = f"{area}xr{element}"
-    if key in elem_cache.keys() and random.random() < 0.99: #cache hit
+    if key in elem_cache.keys() and random.random() < 0.9999: #cache hit
         return elem_cache[key]
     #cache miss
     if CACHE_ONLY: return []

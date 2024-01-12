@@ -116,7 +116,7 @@ route_sizes = (
     3, #light rail
     4, #train
     3, #bus
-    2, #ferry
+    3, #ferry
     2, #bike
 )
 
@@ -186,8 +186,8 @@ counties = ("Sullivan County, NH", "Rockingham, NH", "Strafford, NH","Hillsborou
             "Maine", "Rhode Island",
             "Essex County, VT", "Caledonia County, VT", "Orange County, VT", "Windsor County, VT", "Windham County, VT", "Bennington County, VT", "Rutland County, VT", "Addison County, VT", "Washington County, VT", "Chittenden County, VT", "Lamoille County, VT", "Orleans County, VT", "Franklin County, VT",
             "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Barnstable County, MA", "Nantucket County, MA", "Suffolk County, MA", "Bristol County, MA", "Hampden County,MA", "Hampshire County, MA", "Franklin County, MA", "Berkshire County, MA",
-            "Windham County, CT", "New London County, CT", "Middlesex County, CT", "Tolland County, CT", #"Hartford County, CT", "New Haven County, CT", "Litchfield County, CT"
-            #"Suffolk County, NY",
+            "Windham County, CT", "New London County, CT", "Middlesex County, CT", "Tolland County, CT", "Hartford County, CT", "New Haven County, CT", "Litchfield County, CT", "Fairfield County, CT",
+            "Suffolk County, NY", #"Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY",
             )# "Massachusetts", "Connecticut")
 nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
 
