@@ -33,7 +33,7 @@ def public_save_cache(filename='cache.pickle'):
     #print(elem_cache.keys()*, sep='\n')
     save_cache(elem_cache, filename=filename)
 
-geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com")
+geolocatior = Nominatim(user_agent="Sophies_Art_Maps_maxlicatenby@gmail.com", timeout=60)
 overpass = Overpass()
 
 def raw_lookup(location):
@@ -123,7 +123,14 @@ def load_nodes(element='"railway"="station"', area="Rockingham, NH"):
 def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
     assert relation.type() == 'relation'
     if level == -1: it = tqdm.tqdm(relation.members(), position=level+1, leave=False)
-    else: it = relation.members()
+    else:
+        try:
+            it = relation.members()
+        except Exception as ex:
+            if "Expected object or value" in str(ex):
+                return
+            else:
+                raise ex
     for member in it:
         if member.type() == 'way':
             yield member
@@ -152,13 +159,14 @@ def cached_elements_from_relation(relation):
         #save_cache(elem_cache)
 
 def point_equality(a, b):
-    return (abs(a[0] - b[0]) < 0.000002) and (abs(a[1] - b[1]) < 0.000002)
+    return (abs(a[0] - b[0]) < 0.000000000002) and (abs(a[1] - b[1]) < 0.000000000002)
 
 
-def get_water_relations(area='New Hampshire'):
+def get_water_relations(area='New Hampshire', selector=['"natural"="water"']):
+    print(f"Water lookup {area}, {selector}")
     osmid = lookup(area)
     areaId = osmid + 3600000000
-    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=['"natural"="water"'])
+    query = overpassQueryBuilder(area=areaId, elementType='relation', selector=selector)
     results = overpass.query(query)
     lines = []
     print(results.countElements())
@@ -180,12 +188,16 @@ def get_water_relations(area='New Hampshire'):
                 try:
                     if point_equality(next_segment[0], line[0]):
                         line = next_segment[::-1] + line
+                        print(f"{way.id()=}")
                     elif point_equality(next_segment[0], line[-1]):
                         line = line + next_segment
+                        print(f"{way.id()=}")
                     elif point_equality(next_segment[-1], line[0]):
                         line = next_segment + line
+                        print(f"{way.id()=}")
                     elif point_equality(next_segment[-1], line[-1]):
                         line = next_segment + line[::-1]
+                        print(f"{way.id()=}")
                     else:
                         print(f"{line[0]=},{line[-1]=}, {next_segment[0]=},{next_segment[-1]=}, {element.id()=}, {way.id()=}, {line=}")
                         continue
@@ -193,15 +205,20 @@ def get_water_relations(area='New Hampshire'):
                     print(f"{ex=}, https://openstreetmap.org/relation/{element.id()}")
             yield line
 
-def cached_get_water_relations(area="New Hampshire"):
+def cached_get_water_relations(area="New Hampshire", selector=['"natural"="water"']):
     global elem_cache
-    key = f"{area}-x-water-relation"
+    if selector[0] == '"natural"="water"':
+        key = f"{area}-x-water-relation"
+        cache = True
+    else:
+        key = f"{area}-x-{selector}"
+        cache = False
 
-    if key in elem_cache.keys() and random.random() < 0.9999: #cache hit
+    if key in elem_cache.keys() and random.random() < 0.9999 and cache: #cache hit
         #print(f"Water Cache Hit, {key}")
         return elem_cache[key]
     print(f"Water Cache Miss, {key}")
-    result = [i for i in tqdm.tqdm(get_water_relations(area))]
+    result = [i for i in tqdm.tqdm(get_water_relations(area, selector=selector))]
     elem_cache[key] = result
     #print(f"{key=},")
     return result
@@ -215,7 +232,13 @@ def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
     lines = []
     for result in tqdm.tqdm(results.elements(), desc=f"{area}, {element}"):
         for member in cached_elements_from_relation(result):
-            lines.append(member)
+            try:
+                lines.append(member)
+            except Exception as ex:
+                if "Expected object or value" in str(ex):
+                    continue
+                else:
+                    raise ex
     return lines
 
 def double_cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
