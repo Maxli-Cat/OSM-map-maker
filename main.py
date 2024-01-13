@@ -10,18 +10,18 @@ road_types = (
     '"highway"="motorway"',
     '"highway"="motorway_link"',
     '"highway"="trunk"',
-    '"highway"="trunk_link"',
-    '"highway"="primary"',
-    '"highway"="secondary"',
-    '"highway"="tertiary"',
-    '"highway"="unclassified"',
-    '"highway"="residential"',
+    #'"highway"="trunk_link"',
+    #'"highway"="primary"',
+    #'"highway"="secondary"',
+    #'"highway"="tertiary"',
+    #'"highway"="unclassified"',
+    #'"highway"="residential"',
    # '"highway"="service"',
-    '"highway"="path"',
-    ['"highway"="footway"','"footway"!="sidewalk"','"footway"!="crossing"', '"footway"!="traffic_island"','"footway"!="link"'],
-    '"highway"="track"',
+    #'"highway"="path"',
+    #['"highway"="footway"','"footway"!="sidewalk"','"footway"!="crossing"', '"footway"!="traffic_island"','"footway"!="link"'],
+    #'"highway"="track"',
     '"natural"="coastline"',
-    '"railway"="rail"',
+    #'"railway"="rail"',
     '"route"="ferry"',
     '"highway"="cycleway"',
 )
@@ -30,76 +30,82 @@ road_sizes = (
     5, #motorway
     4, #link
     4, #trunk
-    3, #trunk_link
-    3, #primary
-    2, #secondary
-    1, #tertiary
-    1, #unclassified
-    1, #residential
+    #3, #trunk_link
+    #3, #primary
+    #2, #secondary
+    #1, #tertiary
+    #1, #unclassified
+    #1, #residential
    # 1, #service
-    1, #path
-    1, #footway
-    1, #track
+    #1, #path
+    #1, #footway
+    #1, #track
     5, #coastline
-    1, #railway
+    #1, #railway
     1, #ferry
     1, #cycleway
+    10, #county
 )
 road_colors = (
     (50,0,0),      #motorway
     (50,0,0),      #motorway link
     (0,0,0),       #trunk
-    (0,0,0),       #trunk_link
-    (0,0,0),       #primary
-    (0,0,0),       #secondary
-    (0,0,0),       #tertiary
-    (50,50,50),    #unclassified
-    (75,75,75),    #residential
+    #(0,0,0),       #trunk_link
+    #(0,0,0),       #primary
+    #(0,0,0),       #secondary
+    #(0,0,0),       #tertiary
+    #(50,50,50),    #unclassified
+    #(75,75,75),    #residential
    # (125,125,125), #service
-    (0,87,0),     #path
-    (0,87,0),     #footway
-    (63,87,0),   #track
+    #(0,87,0),     #path
+    #(0,87,0),     #footway
+    #(63,87,0),   #track
     (0,0,0),    #coastline
-    (50,0,0),     #railway
+    #(50,0,0),     #railway
     (0, 255, 255),  # ferry
     (0,175,0),   #bike
+    (0,175,0),   #county
 )
 road_colors_b = (
     (200,200,200),      #motorway
     (200,200,200),      #motorway link
     (205,205,205),       #trunk
-    (205,205,205),       #trunk_link
-    (205,205,205),       #primary
-    (210,210,210),       #secondary
-    (210,210,210),       #tertiary
-    (215,215,215),    #unclassified
+    #(205,205,205),       #trunk_link
+    #(205,205,205),       #primary
+    #(210,210,210),       #secondary
+    #(210,210,210),       #tertiary
+    #(215,215,215),    #unclassified
    # (215,215,215),    #residential
-    (225,225,225), #service
-    (0,87,0),     #path
-    (0,87,0),     #footway
-    (159,171,127),   #track
+    #(225,225,225), #service
+    #(0,87,0),     #path
+    #(0,87,0),     #footway
+    #(159,171,127),   #track
     (0,0,0),    #coastline
-    (250,200,200),     #railway
+    #(250,200,200),     #railway
     (0, 255, 255),  # ferry
     (0,175,0),   #bike
+    (0,0,0),   #county
 )
 
 container_types = (
     '"place"="island"',
     '"place"="islet"',
     '"natural"="water"',
+    ['"aeroway"="aerodrome"', '"iata"'],
 )
 
 container_sizes = (
     1, #island
     1, #islet
     1, #water
+    1, #airport
 )
 
 container_edge = (
     ((255,255,255), (255,255,255)), #island
     ((255,255,255), (255,255,255)), #islet
-    ((225,240,255), (225,240,255)) #water
+    ((225,240,255), (225,240,255)), #water
+    ((240,120,0), (240,120,0)),#airport
 )
 
 route_types = (
@@ -112,12 +118,12 @@ route_types = (
 )
 
 route_sizes = (
-    3, #subway
-    3, #light rail
-    4, #train
-    3, #bus
-    3, #ferry
-    2, #bike
+    2, #subway
+    2, #light rail
+    2, #train
+    1, #bus
+    1, #ferry
+    1, #bike
 )
 
 route_colors = (
@@ -138,11 +144,11 @@ stop_types = (
 )
 
 stop_sizes = (
-    10, #train
-    7, #subway
-    7, #light rail
-    5, #bus
-    7, #ferry
+    5, #train
+    3, #subway
+    3, #light rail
+    2, #bus
+    3, #ferry
 )
 
 stop_colors = (
@@ -175,19 +181,15 @@ def build_lists_relations(locations, features, colors=((0, 0, 0),), widths=(1,))
             lines.append({"points":maps.double_cached_load_relations(area=location, element=feature), "width":width, "color":color})
     return lines
 
-def build_lists_waters(locations):
+def build_lists_waters(locations, selector=['"natural"="water"']):
     for location in locations:
-        for water in maps.cached_get_water_relations(location):
+        for water in maps.cached_get_water_relations(location, selector=selector):
             yield water
 
 
-states  = ("New Hampshire", "Maine", "Massachusetts", "Vermont", "Rhode Island")
-counties = ("Sullivan County, NH", "Rockingham, NH", "Strafford, NH","Hillsborough County, NH",  "Carroll County, NH", "Belknap County, NH", "Merrimack County, NH", "Grafton County, NH", "Coos County, NH", "Cheshire County, NH",
-            "Maine", "Rhode Island",
-            "Essex County, VT", "Caledonia County, VT", "Orange County, VT", "Windsor County, VT", "Windham County, VT", "Bennington County, VT", "Rutland County, VT", "Addison County, VT", "Washington County, VT", "Chittenden County, VT", "Lamoille County, VT", "Orleans County, VT", "Franklin County, VT",
-            "Essex County, MA", "Middlesex County, MA", "Norfolk County, MA", "Plymouth County, MA", "Worcester County, MA", "Barnstable County, MA", "Nantucket County, MA", "Suffolk County, MA", "Bristol County, MA", "Hampden County,MA", "Hampshire County, MA", "Franklin County, MA", "Berkshire County, MA",
-            "Windham County, CT", "New London County, CT", "Middlesex County, CT", "Tolland County, CT", "Hartford County, CT", "New Haven County, CT", "Litchfield County, CT", "Fairfield County, CT",
-            "Suffolk County, NY", #"Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY",
+states  = ("New Hampshire",)# "Maine", "Massachusetts", "Vermont", "Rhode Island")
+counties = ("New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA",
+            "Suffolk County, NY", "Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY", #"New York City",
             )# "Massachusetts", "Connecticut")
 nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
 
@@ -200,12 +202,12 @@ if __name__ == '__main__':
         try:
             roads = build_lists(counties, road_types, widths=road_sizes, colors=road_colors_b)
             break
-        except:
+        except Exception as ex:
             time.sleep(i)
             print(f"Error, {i} times")
+            print(ex)
             continue
 
-    state_lines = build_lists_relations(("New England",), ('"border_type"="state"',), widths=(5,))
 
     routes = build_lists_relations(counties,
                                    route_types, widths=route_sizes, colors=route_colors)
