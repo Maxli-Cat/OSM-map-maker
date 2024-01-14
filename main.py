@@ -195,19 +195,10 @@ def build_lists_waters(locations, selector=['"natural"="water"']):
 
 
 counties = constants.nec_counties
-#counties = ("Coaticook (MRC)", "Le Haut-Saint-François", "Le Granit",
-#            "New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA", "Delaware, USA",
-#            "Suffolk County, NY", "Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY", "New York City",
-#            "Saint Lawrence County, NY", "Franklin County, NY",
-#            "Atlantic County, NJ", "Burlington County, NJ", "Camden County, NJ", "Cape May County, NJ", "Cumberland County, NJ", "Gloucester County, NJ", "Mercer County, NJ", "Monmouth County, NJ", "Ocean county, NJ", "Salem County, NJ",
-#            "Mifflin County, PA", "Sullivan County, PA",
-#            #"Dorchester County, MD", "Somerset County, MD", "Wicomico County, MD", "Worcester County, MD",
-#            "Accomack County, VA", "Northampton County, VA"
-#            )
 
 
 if __name__ == '__main__':
-    water = True
+    water = False
     start = time.time()
     img, drw = draw.setup(*SIZE)
 
