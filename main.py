@@ -1,5 +1,6 @@
 import itertools
 import time
+import constants
 import draw
 import maps
 import projections
@@ -83,7 +84,7 @@ road_colors_b = (
     (0,0,0),    #coastline
     #(250,200,200),     #railway
     (0, 255, 255),  # ferry
-    (0,175,0),   #bike
+    (127,215,127),   #bike
     (0,0,0),   #county
 )
 
@@ -114,7 +115,8 @@ route_types = (
     '"route"="light_rail"',
     '"route"="bus"',
     '"route"="ferry"',
-    '"route"="bicycle"',
+    ['"route"="bicycle"','"network"!="lcn"'],
+    ['"route"="bicycle"','"network"="lcn"'],
 )
 
 route_sizes = (
@@ -124,6 +126,7 @@ route_sizes = (
     1, #bus
     1, #ferry
     1, #bike
+    1, #local bike
 )
 
 route_colors = (
@@ -133,6 +136,7 @@ route_colors = (
     (0,0,255),  #bus
     (0,255,255),  #ferry
     (0,175,0),   #bike
+    (127,215,127),   #local bike
 )
 
 stop_types = (
@@ -190,22 +194,20 @@ def build_lists_waters(locations, selector=['"natural"="water"']):
             yield water
 
 
-states  = ("New Hampshire",)# "Maine", "Massachusetts", "Vermont", "Rhode Island")
-counties = ("Coaticook (MRC)", "Le Haut-Saint-François", "Le Granit",
-            "New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA",
-            "Suffolk County, NY", "Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY", #"New York City",
-            "Saint Lawrence County, NY", "Franklin County, NY",
-            "Atlantic County, NJ","Cape May County, NJ", "Cumberland County, NJ",
-            "Kent County, DE", "New Castle County, DE", "Sussex County, DE",
-            "Mifflin County, PA","Sullivan County, PA",
-            "Worcester County, MD",
-            "Accomack County, VA", "Northampton County, VA"
-            )# "Massachusetts", "Connecticut")
-nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
+counties = constants.nec_counties
+#counties = ("Coaticook (MRC)", "Le Haut-Saint-François", "Le Granit",
+#            "New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA", "Delaware, USA",
+#            "Suffolk County, NY", "Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY", "New York City",
+#            "Saint Lawrence County, NY", "Franklin County, NY",
+#            "Atlantic County, NJ", "Burlington County, NJ", "Camden County, NJ", "Cape May County, NJ", "Cumberland County, NJ", "Gloucester County, NJ", "Mercer County, NJ", "Monmouth County, NJ", "Ocean county, NJ", "Salem County, NJ",
+#            "Mifflin County, PA", "Sullivan County, PA",
+#            #"Dorchester County, MD", "Somerset County, MD", "Wicomico County, MD", "Worcester County, MD",
+#            "Accomack County, VA", "Northampton County, VA"
+#            )
 
 
 if __name__ == '__main__':
-    water = False
+    water = True
     start = time.time()
     img, drw = draw.setup(*SIZE)
 
