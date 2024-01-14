@@ -141,7 +141,6 @@ def elements_from_relation(relation : OSMPythonTools.element.Element, level=0):
             for e in elements_from_relation(member, level + 1):
                 yield e
 
-
 def cached_elements_from_relation(relation):
     global elem_cache
     id = relation.id()
@@ -160,7 +159,6 @@ def cached_elements_from_relation(relation):
 
 def point_equality(a, b):
     return (abs(a[0] - b[0]) < 0.000000000002) and (abs(a[1] - b[1]) < 0.000000000002)
-
 
 def get_water_relations(area='New Hampshire', selector=['"natural"="water"']):
     print(f"Water lookup {area}, {selector}")
@@ -188,21 +186,22 @@ def get_water_relations(area='New Hampshire', selector=['"natural"="water"']):
                 try:
                     if point_equality(next_segment[0], line[0]):
                         line = next_segment[::-1] + line
-                        print(f"{way.id()=}")
+                        #print(f"{way.id()=}")
                     elif point_equality(next_segment[0], line[-1]):
                         line = line + next_segment
-                        print(f"{way.id()=}")
+                        #print(f"{way.id()=}")
                     elif point_equality(next_segment[-1], line[0]):
                         line = next_segment + line
-                        print(f"{way.id()=}")
+                        #print(f"{way.id()=}")
                     elif point_equality(next_segment[-1], line[-1]):
                         line = next_segment + line[::-1]
-                        print(f"{way.id()=}")
+                        #print(f"{way.id()=}")
                     else:
-                        print(f"{line[0]=},{line[-1]=}, {next_segment[0]=},{next_segment[-1]=}, {element.id()=}, {way.id()=}, {line=}")
+                        #print(f"{line[0]=},{line[-1]=}, {next_segment[0]=},{next_segment[-1]=}, {element.id()=}, {way.id()=}, {line=}")
                         continue
                 except TypeError as ex:
-                    print(f"{ex=}, https://openstreetmap.org/relation/{element.id()}")
+                    #print(f"{ex=}, https://openstreetmap.org/relation/{element.id()}")
+                    pass
             yield line
 
 def cached_get_water_relations(area="New Hampshire", selector=['"natural"="water"']):
@@ -226,7 +225,15 @@ def cached_get_water_relations(area="New Hampshire", selector=['"natural"="water
 def cached_load_relations(area="New Hampshire", element = '"natural"="water"'):
     osmid = lookup(area)
     areaId = osmid + 3600000000
-    if type(element == str): element = [element]
+
+    if type(element) == str:
+        element = element.replace('[', '').replace(']', '').replace('(', '').replace(')', '')
+        if ',' in element:
+            element = element.split(',')
+        else:
+            element = [element]
+
+    #print(f"{element=}")
     query = overpassQueryBuilder(area=areaId, elementType='relation', selector=element)
     results = overpass.query(query)
     lines = []
