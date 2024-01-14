@@ -109,29 +109,29 @@ container_edge = (
 )
 
 route_types = (
+    '"route"="train"',
     '"route"="subway"',
     '"route"="light_rail"',
-    '"route"="train"',
     '"route"="bus"',
     '"route"="ferry"',
     '"route"="bicycle"',
 )
 
 route_sizes = (
+    2, #train
     2, #subway
     2, #light rail
-    2, #train
     1, #bus
     1, #ferry
     1, #bike
 )
 
 route_colors = (
-    (255,0,255), #subway
-    (127,0,255), #light rail
-    (255,0,0),   #train
-    (0,0,255),   #bus
-    (0,255,255), #ferry
+    (255, 0, 0),  # train
+    (255,0,255),  #subway
+    (127,0,255),  #light rail
+    (0,0,255),  #bus
+    (0,255,255),  #ferry
     (0,175,0),   #bike
 )
 
@@ -141,6 +141,7 @@ stop_types = (
     ['"railway"="station"','"train"="yes"', '"station"="light_rail"'],
     '"highway"="bus_stop"',
     '"amenity"="ferry_terminal"',
+    '"place"="county"',
 )
 
 stop_sizes = (
@@ -149,6 +150,7 @@ stop_sizes = (
     3, #light rail
     2, #bus
     3, #ferry
+    30, #county
 )
 
 stop_colors = (
@@ -157,6 +159,7 @@ stop_colors = (
     (127, 0, 255),  # light rail
     (0, 0, 255),  # bus
     (0, 255, 255),  # ferry
+    (0, 0, 0),  # county
 )
 
 def build_lists(locations, features, colors=((0,0,0),), widths=(1,)):
@@ -188,13 +191,21 @@ def build_lists_waters(locations, selector=['"natural"="water"']):
 
 
 states  = ("New Hampshire",)# "Maine", "Massachusetts", "Vermont", "Rhode Island")
-counties = ("New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA",
+counties = ("Coaticook (MRC)", "Le Haut-Saint-François", "Le Granit",
+            "New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA",
             "Suffolk County, NY", "Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY", #"New York City",
+            "Saint Lawrence County, NY", "Franklin County, NY",
+            "Atlantic County, NJ","Cape May County, NJ", "Cumberland County, NJ",
+            "Kent County, DE", "New Castle County, DE", "Sussex County, DE",
+            "Mifflin County, PA","Sullivan County, PA",
+            "Worcester County, MD",
+            "Accomack County, VA", "Northampton County, VA"
             )# "Massachusetts", "Connecticut")
 nh_counties = ("Belknap County, NH", "Carroll County, NH", "Cheshire County, NH", "Coos County, NH", "Hillsborough County, NH","Merrimack County, NH", "Rockingham County, NH","Strafford County, NH", "Sullivan County, NH", "Grafton County, NH")
 
 
 if __name__ == '__main__':
+    water = False
     start = time.time()
     img, drw = draw.setup(*SIZE)
 
@@ -214,14 +225,14 @@ if __name__ == '__main__':
     stations = build_list_nodes(counties,
                                 stop_types, colors=stop_colors, sizes=stop_sizes)
 
-    waters = build_lists(counties, container_types, widths=container_sizes, colors=container_edge)
-    #waters2 = build_lists_relations(counties, ('"natural"="water"',), colors=(((225,240,255), (225,240,255)),), outer_only=True)
-    waters2 = build_lists_waters(counties)
-    time.sleep(1)
-    draw.drawCollectionWater(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
+    if water:
+        waters = build_lists(counties, container_types, widths=container_sizes, colors=container_edge)
+        waters2 = build_lists_waters(counties)
+
+        draw.drawCollectionWater(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
+        draw.drawCollectionPoly(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
     maps.public_save_cache()
-    draw.drawCollectionPoly(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
-    draw.drawCollectionLines(roads , drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionLines(roads[::-1] , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionLines(routes , drw, projection=projections.cartesian, projection_args=[SIZE])
     #draw.drawCollectionLines(state_lines , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionPoints(stations[::-1], drw, projection=projections.cartesian, projection_args=[SIZE])
