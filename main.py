@@ -22,7 +22,7 @@ road_types = (
     #['"highway"="footway"','"footway"!="sidewalk"','"footway"!="crossing"', '"footway"!="traffic_island"','"footway"!="link"'],
     #'"highway"="track"',
     '"natural"="coastline"',
-    #'"railway"="rail"',
+    '"railway"="rail"',
     '"route"="ferry"',
     '"highway"="cycleway"',
 )
@@ -42,10 +42,9 @@ road_sizes = (
     #1, #footway
     #1, #track
     5, #coastline
-    #1, #railway
+    1, #railway
     1, #ferry
     1, #cycleway
-    10, #county
 )
 road_colors = (
     (50,0,0),      #motorway
@@ -62,7 +61,7 @@ road_colors = (
     #(0,87,0),     #footway
     #(63,87,0),   #track
     (0,0,0),    #coastline
-    #(50,0,0),     #railway
+    (50,0,0),     #railway
     (0, 255, 255),  # ferry
     (0,175,0),   #bike
     (0,175,0),   #county
@@ -82,7 +81,7 @@ road_colors_b = (
     #(0,87,0),     #footway
     #(159,171,127),   #track
     (0,0,0),    #coastline
-    #(250,200,200),     #railway
+    (250,200,200),     #railway
     (0, 255, 255),  # ferry
     (127,215,127),   #bike
     (0,0,0),   #county
