@@ -14,16 +14,15 @@ aspect = run / rise
 SIZE = (SIZE[0], int(SIZE[0] * aspect))
 SIZE_INCH = (SIZE[0] / DPI, SIZE[1] / DPI)
 
-nec_counties = ("Coaticook (MRC)", "Le Haut-Saint-François", "Le Granit", "Le Val-Saint-François", "Brome-Missisquoi",
-                "New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA", "Delaware, USA",
+nec_counties = ("Coaticook (MRC)", "Le Haut-Saint-François", "Le Granit", "Le Val-Saint-François", "Brome-Missisquoi", "Les Sources", "Les Appalaches", "Beauce-Sartigan", "La Haute-Yamaska, Quebec", "Acton, Quebec", "Drummond, Quebec", "Arthabaska, Quebec",
+                "New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massachusetts, USA", "Connecticut, USA", "Delaware, USA", "New Jersey, USA",
                 "Suffolk County, NY", "Clinton County, NY", "Essex County, NY", "Warren County, NY", "Washington County, NY", "Rensselaer County, NY", "Columbia County, NY", "Dutchess County, NY", "Putnam County, NY", "Westchester County, NY", "Nassau County, NY", "New York City",
                 "Saint Lawrence County, NY", "Franklin County, NY", "Jefferson County, NY",
-                "Atlantic County, NJ", "Burlington County, NJ", "Camden County, NJ", "Cape May County, NJ", "Cumberland County, NJ", "Gloucester County, NJ", "Mercer County, NJ", "Monmouth County, NJ", "Ocean county, NJ", "Salem County, NJ",
-                "Bradford County, PA", "Mifflin County, PA", "Potter County, PA", "Sullivan County, PA", "Susquehanna County, PA", "Tioga County, PA", "Wayne County, PA",
+                "Bradford County, PA","Delaware County, PA", "Mifflin County, PA", "Philadelphia County, PA", "Potter County, PA", "Sullivan County, PA", "Susquehanna County, PA", "Tioga County, PA", "Wayne County, PA",
                 "Caroline County, MD", "Cecil County, MD", "Dorchester County, MD", "Kent County, MD", "Queen Anne's County, MD", "Somerset County, MD", "Talbot County, MD", "Wicomico County, MD", "Worcester County, MD",
                 "Washington, DC",
-                "Accomack County, VA", "Northampton County, VA"
-            )
+                "Accomack County, VA", "Northampton County, VA",
+)
 
 cz_counties = ("Praha, CZ",)
 

@@ -11,7 +11,7 @@ road_types = (
     '"highway"="motorway"',
     '"highway"="motorway_link"',
     '"highway"="trunk"',
-    #'"highway"="trunk_link"',
+    '"highway"="trunk_link"',
     #'"highway"="primary"',
     #'"highway"="secondary"',
     #'"highway"="tertiary"',
@@ -31,7 +31,7 @@ road_sizes = (
     5, #motorway
     4, #link
     4, #trunk
-    #3, #trunk_link
+    3, #trunk_link
     #3, #primary
     #2, #secondary
     #1, #tertiary
@@ -50,7 +50,7 @@ road_colors = (
     (50,0,0),      #motorway
     (50,0,0),      #motorway link
     (0,0,0),       #trunk
-    #(0,0,0),       #trunk_link
+    (0,0,0),       #trunk_link
     #(0,0,0),       #primary
     #(0,0,0),       #secondary
     #(0,0,0),       #tertiary
@@ -70,7 +70,7 @@ road_colors_b = (
     (200,200,200),      #motorway
     (200,200,200),      #motorway link
     (205,205,205),       #trunk
-    #(205,205,205),       #trunk_link
+    (205,205,205),       #trunk_link
     #(205,205,205),       #primary
     #(210,210,210),       #secondary
     #(210,210,210),       #tertiary
@@ -200,32 +200,41 @@ if __name__ == '__main__':
     water = False
     start = time.time()
     img, drw = draw.setup(*SIZE)
+    stations = build_list_nodes(counties, stop_types, colors=stop_colors, sizes=stop_sizes)
 
-    for i in range(1000):
+    while True:
         try:
             roads = build_lists(counties, road_types, widths=road_sizes, colors=road_colors_b)
+            routes = build_lists_relations(counties, route_types, widths=route_sizes, colors=route_colors)
             break
         except Exception as ex:
-            time.sleep(i)
-            print(f"Error, {i} times")
-            print(ex)
-            continue
-
-
-    routes = build_lists_relations(counties,
-                                   route_types, widths=route_sizes, colors=route_colors)
-    stations = build_list_nodes(counties,
-                                stop_types, colors=stop_colors, sizes=stop_sizes)
+            if "your internet connection" in str(ex):
+                time.sleep(45)
+            else:
+                print(ex)
+                exit()
 
     if water:
-        waters = build_lists(counties, container_types, widths=container_sizes, colors=container_edge)
-        waters2 = build_lists_waters(counties)
-
+        while True:
+            try:
+                waters = build_lists(counties, container_types, widths=container_sizes, colors=container_edge)
+                waters2 = build_lists_waters(counties)
+                break
+            except Exception as ex:
+                if "your internet connection" in str(ex):
+                    time.sleep(45)
+                else:
+                    print(ex)
+                    exit()
         draw.drawCollectionWater(waters2, drw, projection=projections.cartesian, projection_args=[SIZE])
         draw.drawCollectionPoly(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
+    else:
+        waters = build_lists(counties, (['"aeroway"="aerodrome"', '"iata"'],), widths=(1,), colors=(((240,120,0), (240,120,0)),))
+        draw.drawCollectionPoly(waters, drw, projection=projections.cartesian, projection_args=[SIZE])
+
     maps.public_save_cache()
     draw.drawCollectionLines(roads[::-1] , drw, projection=projections.cartesian, projection_args=[SIZE])
-    draw.drawCollectionLines(routes , drw, projection=projections.cartesian, projection_args=[SIZE])
+    draw.drawCollectionLines(routes[::-1], drw, projection=projections.cartesian, projection_args=[SIZE])
     #draw.drawCollectionLines(state_lines , drw, projection=projections.cartesian, projection_args=[SIZE])
     draw.drawCollectionPoints(stations[::-1], drw, projection=projections.cartesian, projection_args=[SIZE])
     img.show()
