@@ -24,6 +24,7 @@ road_types = (
     '"natural"="coastline"',
     '"railway"="rail"',
     '"route"="ferry"',
+    #['"route"="ferry"','"access"!="no"'],
     '"highway"="cycleway"',
 )
 

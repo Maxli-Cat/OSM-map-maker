@@ -172,8 +172,14 @@ def get_water_relations(area='New Hampshire', selector=['"natural"="water"']):
         print('---')
         ways = element.members(True, False, True)
         if len(ways) == 0: continue
-        elif len(ways) == 1: yield ways[0].geometry()['coordinates']
-
+        elif len(ways) == 1:
+            try:
+                yield ways[0].geometry()['coordinates']
+            except Exception as ex:
+                if "Cannot build geometry" in str(ex):
+                    continue
+                else:
+                    raise ex
         else:
             line = ways[0].geometry()['coordinates']
             for way in ways[1:]:
