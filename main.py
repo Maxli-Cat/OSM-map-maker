@@ -166,6 +166,19 @@ stop_colors = (
     (0, 0, 0),  # county
 )
 
+def time_format(seconds):
+    assert seconds > 0
+    st = ""
+    if seconds > 3600:
+        st += f"{seconds//3600} Hours, "
+        seconds = seconds % 3600
+    if seconds > 60:
+        st += f"{seconds // 60 } Minutes, "
+        seconds = seconds % 60
+    if seconds > 0:
+        st += f"{seconds} Seconds, "
+    return st[:-2]
+
 def build_lists(locations, features, colors=((0,0,0),), widths=(1,)):
     roads = []
     for location in locations:
@@ -241,4 +254,4 @@ if __name__ == '__main__':
     img.show()
     img.save("map.png")
     stop = time.time()
-    print(f"Took {stop - start} seconds")
+    print(f"Took {time_format(stop - start)}")
