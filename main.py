@@ -211,7 +211,7 @@ counties = constants.nec_counties
 
 
 if __name__ == '__main__':
-    water = False
+    water = True
     start = time.time()
     img, drw = draw.setup(*SIZE)
     stations = build_list_nodes(counties, stop_types, colors=stop_colors, sizes=stop_sizes)

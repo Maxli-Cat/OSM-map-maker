@@ -25,23 +25,31 @@ nec_counties = ("New Hampshire", "Maine", "Rhode Island", "Vermont, USA", "Massa
 
                 "City of Belleville, Ontario", "City of Cornwall, Ontario", "City of Kingston, Ontario", "City of Quinte West, Ontario",
                 "Frontenac County, Ontario", "Hastings County, Ontario", "Gananoque, Ontario", "Leeds and Grenville Counties, Ontario",
-                #"Lennox and Addington County, Ontario", "Nipissing District, Ontario", "Northumberland County, Ontario", "Ottawa, Ontario",
-                #"Prescott and Russell Counties, Ontario", "Prince Edward County, Ontario", "Renfrew County, Ontario", "Stormont, Dundas and Glengarry Counties, Ottawa", "Town of Prescott, Ontario"
+                "Lennox and Addington County, Ontario", "Nipissing District, Ontario", "Northumberland County, Ontario", "Ottawa, Ontario",
+                "Prescott and Russell Counties, Ontario", "Prince Edward County, Ontario", "Renfrew County, Ontario", "Stormont, Dundas and Glengarry Counties, Ottawa", "Town of Prescott, Ontario",
 
-                #"Albany County, NY", "Broome County, NY", "Cayuga County, NY", "Chemung County, NY", 'Clinton County, NY', 'Columbia County, NY',
-                #'Dutchess County, NY', 'Essex County, NY', 'Franklin County, NY', "Fulton County, NY", "Hamilton County, NY",
-                #"Herkimer County, NY", 'Jefferson County, NY', "Lewis County, NY", "Livingston County, NY", "Montgomery County, NY", "Monroe County, NY", 'Nassau County, NY', 'New York City',
-                #"Oneida County, NY", "Onondaga County, NY", "Ontario County, NY", "Oswego County, NY", 'Putnam County, NY', 'Rensselaer County, NY', 'Saint Lawrence County, NY',
-                "Saratoga County, NY", "Schenectady County, NY", "Schoharie County, NY", "Schuyler County, NY", "Seneca County, NY", 'Suffolk County, NY', "Tioga County, NY", "Tompkins County, NY",
-                'Warren County, NY', 'Washington County, NY', "Wayne County, NY", 'Westchester County, NY', "Yates County, NY",
+                "Albany County, NY", "Broome County, NY", "Cayuga County, NY", "Chemung County, NY", "Chenango County, NY", 'Clinton County, NY', 'Columbia County, NY', "Delaware County, NY",
+                'Dutchess County, NY', 'Essex County, NY', 'Franklin County, NY', "Fulton County, NY", "Greene County, NY", "Hamilton County, NY",
+                "Herkimer County, NY", 'Jefferson County, NY', "Lewis County, NY", "Livingston County, NY", "Montgomery County, NY", "Monroe County, NY", 'Nassau County, NY', 'New York City',
+                "Oneida County, NY", "Onondaga County, NY", "Ontario County, NY", "Orange County, NY", "Oswego County, NY", "Otsego County, NY", 'Putnam County, NY', 'Rensselaer County, NY', "Rockland County, NY", 'Saint Lawrence County, NY',
+                "Saratoga County, NY", "Schenectady County, NY", "Schoharie County, NY", "Schuyler County, NY", "Seneca County, NY", 'Suffolk County, NY', "Sullivan County, NY", "Tioga County, NY", "Tompkins County, NY",
+                "Ulster County, NY", 'Warren County, NY', 'Washington County, NY', "Wayne County, NY", 'Westchester County, NY', "Yates County, NY",
 
                 "Bradford County, PA","Delaware County, PA", "Mifflin County, PA", "Philadelphia County, PA", "Potter County, PA",
                 "Sullivan County, PA", "Susquehanna County, PA", "Tioga County, PA", "Wayne County, PA",
 
                 "Caroline County, MD", "Cecil County, MD", "Dorchester County, MD", "Kent County, MD", "Queen Anne's County, MD",
                 "Somerset County, MD", "Talbot County, MD", "Wicomico County, MD", "Worcester County, MD",
-
                 "Accomack County, VA", "Northampton County, VA",
+
+                #"Alexandria, VA", "Amelia County, VA", "Arlington County, VA", "Caroline County, VA", "Charles City County, VA", "Chesapeake, VA", "Chesterfield County, VA",
+                #"Colonial Heights, VA", "Culpeper County, VA", "Dinwiddie County, VA", "Emporia, VA", "Fairfax County, VA", "Fairfax, VA", "Falls Church, VA", "Fauquier County",
+                #"Franklin, VA", "Fredericksburg, VA", "Gloucester County, VA", "Goochland County, VA", "Greensville County, VA", "Hampton, VA", "Hanover County, VA", "Henrico County, VA",
+                #"Hopewell, VA", "Isle of Wight County, VA", "James City County, VA", "King and Queen County, VA", "King George County, VA",
+                #"King William County, VA", "Lancaster County, VA", "Loudoun County, VA", "Manassas, VA", "Manassas Park, VA", "Mathews County, VA", "Middlesex County, VA",
+                #"Newport News, VA", "New Kent County, VA", "Northumberland County, VA", "Petersburg, VA", "Portsmouth, VA", "Poquoson, VA",
+                #"Prince George County, VA", "Prince William County, VA", "Richmond, VA", "Richmond County, VA", "Southampton County, VA", "Stafford County, VA",
+                #"Suffolk, VA", "Surry County, VA", "Sussex County, VA", "Virginia Beach, VA", "Westmoreland County, VA", "Williamsburg, VA", "York County, VA",
 )
 
 cz_counties = ("Praha, CZ",)
